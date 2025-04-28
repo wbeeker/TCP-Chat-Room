@@ -1,91 +1,111 @@
 import socket
 import threading
-import tkinter
-import tkinter.scrolledtext
-from tkinter import simpledialog
+import tkinter as tk
+from tkinter import scrolledtext, simpledialog
+from tkinter import messagebox
+import sys
 
 HOST = '127.0.0.1'
 PORT = 9090
 
-class Client:
+class ChatClient:
+    def __init__(self, master):
+        self.master = master
+        self.master.title("Chat Client")
 
-    def __init__(self, host, port):
-
-        self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        self.sock.connect((host, port))
-
-        msg = tkinter.Tk()
-        msg.withdraw()
-
-        self.nickname = simpledialog.askstring("Nickname", "Please choose a nickname", parent=msg)
-
-        self.gui_done = False
+        self.nickname = None
         self.running = True
 
-        gui_thread = threading.Thread(target=self.gui_loop)
-        receive_thread = threading.Thread(target=self.receive)
+        self.create_widgets()
+        self.setup_connection()
 
-        gui_thread.start()
-        receive_thread.start()
+        self.receive_thread = threading.Thread(target=self.receive_messages)
+        self.receive_thread.start()
 
-    def gui_loop(self):
-        self.win = tkinter.Tk()
-        self.win.configure(bg="lightgray")
+    def create_widgets(self):
+        # Display chat messages
+        self.chat_area = scrolledtext.ScrolledText(self.master, wrap=tk.WORD, state='disabled')
+        self.chat_area.pack(padx=20, pady=5, expand=True, fill='both')
 
-        self.chat_label = tkinter.Label(self.win, text="Chat:", bg="lightgray")
-        self.chat_label.config(font=("Arial", 12))
-        self.chat_label.pack(padx=20, pady=5)
+        # Input field
+        self.msg_entry = tk.Entry(self.master)
+        self.msg_entry.pack(padx=20, pady=5, fill='x')
+        self.msg_entry.bind("<Return>", lambda event: self.send_message())
 
-        self.text_area = tkinter.scrolledtext.ScrolledText(self.win)
-        self.text_area.pack(padx=20, pady=5)
-        self.text_area.config(state='disabled')
-
-        self.msg_label = tkinter.Label(self.win, text="Message:", bg="lightgray")
-        self.msg_label.config(font=("Arial", 12))
-        self.msg_label.pack(padx=20, pady=5)
-
-        self.input_area = tkinter.Text(self.win, height=3)
-        self.input_area.pack(padx=20, pady=5)
-
-        self.send_button = tkinter.Button(self.win, text="Send", command=self.write)
-        self.send_button.config(font=('Arial', 12))
+        # Send button
+        self.send_button = tk.Button(self.master, text="Send", command=self.send_message)
         self.send_button.pack(padx=20, pady=5)
 
-        self.gui_done = True
+        # Exit button
+        self.exit_button = tk.Button(self.master, text="Exit", command=self.close_connection)
+        self.exit_button.pack(padx=20, pady=5)
 
-        self.win.protocol("WM_DELETE_WINDOW", self.stop)
+    def setup_connection(self):
+        self.client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
-        self.win.mainloop()
+        try:
+            self.client.connect((HOST, PORT))
+        except ConnectionRefusedError:
+            messagebox.showerror("Connection Error", "Failed to connect to server.")
+            sys.exit(1)
 
+        self.nickname = tk.simpledialog.askstring("Nickname", "Choose your nickname:")
+        if not self.nickname:
+            messagebox.showinfo("Exit", "You must provide a nickname.")
+            sys.exit(0)
 
-    def write(self):
-        message = f"{self.nickname}: {self.input_area.get('1.0', 'end')}"
-        self.sock.send(message.encode('utf-8'))
-        self.input_area.delete('1.0', 'end')
-
-    def stop(self):
-        self.running = False
-        self.win.destroy()
-        self.sock.close()
-        exit(0)
-
-    def receive(self):
+    def receive_messages(self):
         while self.running:
             try:
-                message = self.sock.recv(1024)
-                if message == 'NICK':
-                    self.sock.send(self.nickname.encode('utf-8'))
-                else:
-                    if self.gui_done:
-                        self.text_area.config(state='normal')
-                        self.text_area.insert('end', message)
-                        self.text_area.yview('end')
-                        self.text_area.config(state='disabled')
-            except ConnectionAbortedError:
-                break
-            except:
-                print("Error")
-                self.sock_close()
-                break
+                message = self.client.recv(4096).decode('utf-8')
+                if not message:
+                    break
 
-client = Client(HOST, PORT)
+                if message == "NICK":
+                    self.client.send(self.nickname.encode('utf-8'))
+                else:
+                    self.display_message(message)
+            except:
+                break
+        self.close_connection()
+
+    def send_message(self):
+        message = self.msg_entry.get()
+        if message:
+            if message.lower() == "/exit":
+                self.close_connection()
+                return
+
+            full_message = f"{self.nickname}: {message}"
+            try:
+                self.client.send(full_message.encode('utf-8'))
+            except:
+                pass
+
+            self.msg_entry.delete(0, tk.END)
+
+    def display_message(self, message):
+        self.chat_area.configure(state='normal')
+        self.chat_area.insert(tk.END, message + "\n")
+        self.chat_area.configure(state='disabled')
+        self.chat_area.yview(tk.END)
+
+    def close_connection(self):
+        if self.running:
+            self.running = False
+            try:
+                self.client.send("/exit".encode('utf-8'))
+                self.client.close()
+            except:
+                pass
+            self.master.destroy()
+            sys.exit(0)
+
+def main():
+    root = tk.Tk()
+    app = ChatClient(root)
+    root.protocol("WM_DELETE_WINDOW", app.close_connection)
+    root.mainloop()
+
+if __name__ == "__main__":
+    main()
