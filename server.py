@@ -22,13 +22,17 @@ def handle(client):
     while True:
         try:
             message = client.recv(1024)
-            print(f"{nicknames[client.index(client)]} says {message}")
+            if not message:
+                raise Exception("Client disconnected")
+            index = clients.index(client)
+            print(f"{nicknames[index]} says {message.decode('utf-8')}")
             broadcast(message)
         except:
             index = clients.index(client)
             clients.remove(client)
             client.close()
             nickname = nicknames[index]
+            broadcast(f"{nickname} has left the chat.\n".encode('utf-8'))
             nicknames.remove(nickname)
             break
 
@@ -39,7 +43,12 @@ def receive():
         print(f"Connected with {str(address)}!")
 
         client.send("NICK".encode('utf-8'))
-        nickname = client.recv(1024)
+        try:
+            nickname = client.recv(1024).decode('utf-8')
+        except ConnectionResetError:
+            print("Client disconnected before sending nickname.")
+            client.close()
+            continue
 
         nicknames.append(nickname)
         clients.append(client)
