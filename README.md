@@ -26,5 +26,7 @@ Run another iteration of the client via terminal:
 
 ![Image](https://github.com/user-attachments/assets/8558ff2e-0100-4d45-81d3-c02492f75e02)
 
+Enter another nickname and select the OK button. Another Chat Client window should appear with the second nickname listed: 
 
+<img width="615" alt="Image" src="https://github.com/user-attachments/assets/5e603232-ef09-48e0-afb7-486cdfb37989" />
 
