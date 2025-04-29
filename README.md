@@ -16,4 +16,12 @@ The following confirmation message should appear in the terminal:
 
 Next, run the client file from your IDE or from terminal. This should make the box below appear:
 
+![Image](https://github.com/user-attachments/assets/0cbe7276-bcda-4226-8fd2-847a448959b2)
+
+Enter a nickname and select the OK button. This will closeout the nickname window, and make the Chat Client appear:
+
+![Image](https://github.com/user-attachments/assets/784da74c-42c2-48ea-8e36-82f4b23a8104)
+
+
+
 
