@@ -30,3 +30,7 @@ Enter another nickname and select the OK button. Another Chat Client window shou
 
 <img width="615" alt="Image" src="https://github.com/user-attachments/assets/5e603232-ef09-48e0-afb7-486cdfb37989" />
 
+The two clients will now be able to share messages with each other:
+
+![Image](https://github.com/user-attachments/assets/df846cd3-5cf6-4705-96ea-640ee235a165)
+
