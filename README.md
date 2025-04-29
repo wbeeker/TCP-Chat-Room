@@ -13,3 +13,7 @@ First, we want to get the server up and running. To do this, simply type the fol
 The following confirmation message should appear in the terminal:
 
 ![Image](https://github.com/user-attachments/assets/740ce44d-2c47-4afc-8dee-46923a99fcc4)
+
+Next, run the client file from your IDE or from terminal. This should make the box below appear:
+
+
