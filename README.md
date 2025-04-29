@@ -34,3 +34,8 @@ The two clients will now be able to share messages with each other:
 
 ![Image](https://github.com/user-attachments/assets/df846cd3-5cf6-4705-96ea-640ee235a165)
 
+The server will keep a log of the conversation:
+
+![Image](https://github.com/user-attachments/assets/49440b2a-2e73-4be3-9ecf-4a3e861f05ac)
+
+
