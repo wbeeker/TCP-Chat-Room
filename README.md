@@ -1,1 +1,6 @@
 # TCP-Chat-Room
+
+This simple terminal-based and GUI-enabled chat room utilizes Python's built-in socket and threading libraries to create a local connection between two clients using the Transmission Control Protocol (TCP). 
+
+The server listens for client connections on 127.0.0.1:9090, and each connected client is prompted to enter a nickname. Messages from clients are broadcast to all other users in real time. The GUI client features a chat window, message entry box, and buttons for sending messages or exiting the chat. Background threading ensures the UI remains responsive while messages are being received.
+
