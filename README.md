@@ -22,6 +22,9 @@ Enter a nickname and select the OK button. This will closeout the nickname windo
 
 ![Image](https://github.com/user-attachments/assets/784da74c-42c2-48ea-8e36-82f4b23a8104)
 
+Run another iteration of the client via terminal: 
+
+![Image](https://github.com/user-attachments/assets/8558ff2e-0100-4d45-81d3-c02492f75e02)
 
 
 
