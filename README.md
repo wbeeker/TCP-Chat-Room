@@ -12,4 +12,4 @@ First, we want to get the server up and running. To do this, simply type the fol
 
 The following confirmation message should appear in the terminal:
 
-![Image](https://github.com/user-attachments/assets/ec74891f-1fd9-4ba7-926c-b1cb600dbac1)
+\
