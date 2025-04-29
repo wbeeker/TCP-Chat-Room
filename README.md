@@ -6,6 +6,10 @@ The server listens for client connections on 127.0.0.1:9090, and each connected 
 
 **Run Through**
 
+First, we want to get the server up and running. To do this, simply type the following command in the terminal:
+
 ![Image](https://github.com/user-attachments/assets/8923987d-9619-4101-9b89-0edae909b990)
+
+The following confirmation message should appear in the terminal:
 
 ![Image](https://github.com/user-attachments/assets/ec74891f-1fd9-4ba7-926c-b1cb600dbac1)
